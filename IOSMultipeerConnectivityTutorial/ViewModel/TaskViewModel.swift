@@ -11,6 +11,7 @@ import Combine
 import MultipeerConnectivity
 
 // NOTE
+// we can alos add service layer for downloading and sending images to peer 
 // @available(iOS 13.0, *) this line because I set target ios version 12.2 and combine came from ios 13
 // I did this because MultipeerConnectivity not working properly when I set the target abouve version 13
 // That is why i did this
