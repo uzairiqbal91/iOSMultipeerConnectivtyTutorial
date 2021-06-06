@@ -1,10 +1,4 @@
-//
-//  AppDelegate.swift
-//  IOSMultipeerConnectivityTutorial
-//
-//  Created by Arthur Knopper on 17/05/2019.
-//  Copyright © 2019 Arthur Knopper. All rights reserved.
-//
+
 
 import UIKit
 

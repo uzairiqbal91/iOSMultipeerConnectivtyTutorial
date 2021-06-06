@@ -10,9 +10,11 @@ import UIKit
 import Combine
 import MultipeerConnectivity
 
+// NOTE
 // @available(iOS 13.0, *) this line because I set target ios version 12.2 and combine came from ios 13
 // I did this because MultipeerConnectivity not working properly when I set the target abouve version 13
 // That is why i did this
+// The commit will show as muhammad rizwan because this mac name is muhammad rizwan
 
 @available(iOS 13.0, *)
 class TaskViewModel : NSObject , URLSessionDownloadDelegate, MCSessionDelegate, MCBrowserViewControllerDelegate {
