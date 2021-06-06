@@ -12,7 +12,7 @@ import MultipeerConnectivity
 class ViewController: UIViewController {
     
     
-
+    
     @IBOutlet weak var downloadImageView1: UIImageView!
     @IBOutlet weak var downloadImageView2: UIImageView!
     @IBOutlet weak var downloadImageView3: UIImageView!
@@ -34,10 +34,15 @@ class ViewController: UIViewController {
     var taskCompleteSubscriber : AnyCancellable?
     var taskProgressSubscriber : AnyCancellable?
     var reciveImageSubscriber : AnyCancellable?
-    
+    var taskViewModel = TaskViewModel()
     var isAllDownloaded : [Bool] = []{
         
+        
+        
         didSet{
+            
+            // checking that all images are downloaded or not , we can alos do this by dispatch group and observe when all done
+            // I am putting the static value which is 3 but can also be done by dynamically aswell
             
             if isAllDownloaded.count == 3 {
                 
@@ -50,8 +55,6 @@ class ViewController: UIViewController {
         }
         
     }
-    var taskViewModel = TaskViewModel()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,7 +80,7 @@ class ViewController: UIViewController {
             
             DispatchQueue.main.async {
                 print("called")
-               
+                
                 
                 if let array = self.taskViewModel.taskArray {
                     
@@ -90,7 +93,7 @@ class ViewController: UIViewController {
                                 self.imageViews[i].image = UIImage(data: data as Data)
                             }
                             
-                           
+                            
                         }
                     }
                 }
@@ -148,8 +151,6 @@ class ViewController: UIViewController {
             }) { (resultImage) in
                 
                 DispatchQueue.main.async {
-                    print("called")
-                    
                     
                     for i in 0..<self.uplaodImageViews.count {
                         
@@ -160,8 +161,6 @@ class ViewController: UIViewController {
                         }
                         
                     }
-               
-                    
                 }
             }
         } else {
@@ -171,28 +170,25 @@ class ViewController: UIViewController {
     
     
     @IBAction func connectPeerButtonAction(_ sender: Any) {
-        
         showConnectionMenu()
-//        taskViewModel.sendImage(img: self.downloadImageView1.image ?? UIImage())
     }
     
     @IBAction func snedImagesButtonAction(_ sender: Any) {
-        
         
         imageViews.forEach { imageView in
             if let image = imageView.image {
                 taskViewModel.sendImage(img: image)
             }
         }
-     
+        
     }
     
     @objc func showConnectionMenu() {
-      let ac = UIAlertController(title: "Connection Menu", message: nil, preferredStyle: .actionSheet)
+        let ac = UIAlertController(title: "Connection Menu", message: nil, preferredStyle: .actionSheet)
         ac.addAction(UIAlertAction(title: "Host a session", style: .default, handler: taskViewModel.hostSession))
         ac.addAction(UIAlertAction(title: "Join a session", style: .default, handler: taskViewModel.joinSession))
-      ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-      present(ac, animated: true)
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(ac, animated: true)
     }
     
     func cancel(action: UIAlertAction){

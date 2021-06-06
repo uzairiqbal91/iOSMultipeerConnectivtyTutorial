@@ -10,6 +10,10 @@ import UIKit
 import Combine
 import MultipeerConnectivity
 
+// @available(iOS 13.0, *) this line because I set target ios version 12.2 and combine came from ios 13
+// I did this because MultipeerConnectivity not working properly when I set the target abouve version 13
+// That is why i did this
+
 @available(iOS 13.0, *)
 class TaskViewModel : NSObject , URLSessionDownloadDelegate, MCSessionDelegate, MCBrowserViewControllerDelegate {
     
@@ -30,7 +34,6 @@ class TaskViewModel : NSObject , URLSessionDownloadDelegate, MCSessionDelegate, 
     override init() {
         super.init()
         session = URLSession(configuration: config, delegate: self, delegateQueue: OperationQueue())
-        
         peerID = MCPeerID(displayName: UIDevice.current.name)
         mcSession = MCSession(peer: self.peerID, securityIdentity: nil, encryptionPreference: .required)
         mcSession.delegate = self
@@ -40,7 +43,6 @@ class TaskViewModel : NSObject , URLSessionDownloadDelegate, MCSessionDelegate, 
     
     deinit {
         self.mcAdvertiserAssistant.stop()
-        
         }
 
     
@@ -48,7 +50,6 @@ class TaskViewModel : NSObject , URLSessionDownloadDelegate, MCSessionDelegate, 
         if mcSession.connectedPeers.count > 0 {
             if let imageData = img.pngData() {
                 do {
-                   
                     try mcSession.send(imageData, toPeers: mcSession.connectedPeers, with: .reliable)
                 } catch let error as NSError {
                    print(error.localizedDescription)
@@ -88,6 +89,8 @@ class TaskViewModel : NSObject , URLSessionDownloadDelegate, MCSessionDelegate, 
         DispatchQueue.global(qos: .utility).async {
             for url in urls {
                
+                // weak self because of memory optimization and make sure that refrence counter should not in memory
+                
                 self.startDownloadSingleFile(imageUrl: url) { [weak self] task in
                    // can be done when we use Diapatch group and leave dispatch group
                     
@@ -128,6 +131,8 @@ class TaskViewModel : NSObject , URLSessionDownloadDelegate, MCSessionDelegate, 
         downloadInfo.downloadedData = image?.pngData() as NSData?
         downloadInfo.isDownload = true
         downloadedTaskArray.append(downloadInfo)
+        
+        // emitting in taskCompleteSubject steam and will observe in view controller
         self.taskCompleteSubject.send(downloadInfo)
 
         
@@ -139,9 +144,9 @@ class TaskViewModel : NSObject , URLSessionDownloadDelegate, MCSessionDelegate, 
         print("downloaded id \(downloadTask.taskIdentifier)")
         downloadInfo.downloadTaskId = downloadTask.taskIdentifier;
         downloadInfo.progress = progress
-       
+        
+        // emitting in taskProgressSubject steam and will observe in view controller
         self.taskProgressSubject.send(downloadInfo)
-//
         
     }
     

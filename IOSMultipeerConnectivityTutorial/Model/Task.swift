@@ -16,7 +16,4 @@ class Task: NSObject {
     var downloadTaskId:Int?;
     var downloadedData:NSData?;
 
-    
-
-    
 }
