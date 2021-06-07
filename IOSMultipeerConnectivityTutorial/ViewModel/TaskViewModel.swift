@@ -46,6 +46,7 @@ class TaskViewModel : NSObject , URLSessionDownloadDelegate, MCSessionDelegate, 
     
     deinit {
         self.mcAdvertiserAssistant.stop()
+        
         }
 
     

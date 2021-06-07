@@ -48,7 +48,9 @@ class ViewController: UIViewController {
                 
                 buttonView.isHidden = true
                 centerView.isHidden = false
-                
+                self.taskProgressSubscriber?.cancel()
+                self.taskCompleteSubscriber?.cancel()
+              
                 print("tasks done")
             }
             
@@ -74,6 +76,7 @@ class ViewController: UIViewController {
             switch resultCompletion {
             case .failure(let error):
                 print(error.localizedDescription)
+                self.taskCompleteSubscriber?.cancel()
             default: break
             }
         }) { (downloadTasks) in
@@ -100,6 +103,7 @@ class ViewController: UIViewController {
                 
                 
             }
+           
             
         }
     }
@@ -117,6 +121,7 @@ class ViewController: UIViewController {
                 switch resultCompletion {
                 case .failure(let error):
                     print(error.localizedDescription)
+                    self.taskProgressSubscriber?.cancel()
                 default: break
                 }
             }) { (progressTasks) in
@@ -134,6 +139,7 @@ class ViewController: UIViewController {
                     }
                     
                 }
+
             }
         } else {
             // Fallback on earlier versions
@@ -146,6 +152,7 @@ class ViewController: UIViewController {
                 switch resultCompletion {
                 case .failure(let error):
                     print(error.localizedDescription)
+                    self.reciveImageSubscriber?.cancel()
                 default: break
                 }
             }) { (resultImage) in
@@ -162,6 +169,7 @@ class ViewController: UIViewController {
                         
                     }
                 }
+               
             }
         } else {
             // Fallback on earlier versions
@@ -200,6 +208,14 @@ class ViewController: UIViewController {
         setValues()
         self.taskViewModel.downloadAll()
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.reciveImageSubscriber?.cancel()
+    }
+    
+    
+    
+   
     
     
     
